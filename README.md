@@ -157,7 +157,6 @@ export default AnimatedIcon;
 | --------------- | -------- | ------- | ---------------------------------------------------------------------------------- |
 | icon            | YES      |         |  Component to be render as tab icon, it will recevie an animated node prop `progress`.
 
-![Curved Preview](/docs/previews/preview.gif)
 
 ## Built With
 
