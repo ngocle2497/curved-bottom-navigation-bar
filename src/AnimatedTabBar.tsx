@@ -1,5 +1,5 @@
-import React, { useMemo, useEffect, useCallback } from 'react';
-import Animated, { useCode, onChange, call } from 'react-native-reanimated';
+import React, { useMemo, useCallback } from 'react';
+import Animated, { useCode, call, set } from 'react-native-reanimated';
 import { useValues } from 'react-native-redash';
 import { CommonActions, Route } from '@react-navigation/native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
@@ -25,7 +25,7 @@ interface AnimatedTabBarProps
 
   barColor?: string;
 
-  sizeDot?: number;
+  dotSize?: number;
 
   dotColor?: string;
 
@@ -39,7 +39,7 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
     descriptors,
     duration = DEFAULT_ITEM_ANIMATION_DURATION,
     barColor = TAB_BAR_COLOR,
-    sizeDot = SIZE_DOT,
+    dotSize = SIZE_DOT,
     dotColor = TAB_BAR_COLOR,
   } = props;
 
@@ -130,10 +130,10 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
    * here we listen to React Navigation index and update
    * selectedIndex value.
    */
-  useEffect(() => {
+  useCode(() =>
     // @ts-ignore
-    selectedIndex.setValue(navigationIndex);
-  }, [navigationIndex, selectedIndex]);
+    set(selectedIndex, navigationIndex)
+    , [navigationIndex]);
 
   /**
    * @DEV
@@ -141,12 +141,9 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
    */
   useCode(
     () =>
-      onChange(
-        selectedIndex,
-        call([selectedIndex], args => {
-          handleSelectedIndexChange(args[0]);
-        })
-      ),
+      call([selectedIndex], args => {
+        handleSelectedIndexChange(args[0]);
+      }),
     [selectedIndex]
   );
   //#endregion
@@ -156,7 +153,7 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
     <CurvedTabBar
       dotColor={dotColor}
       barHeight={TAB_BAR_HEIGHT}
-      sizeDot={sizeDot}
+      dotSize={dotSize}
       tabBarColor={barColor}
       selectedIndex={selectedIndex}
       routes={getRoutes()}

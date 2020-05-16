@@ -12,6 +12,6 @@ export default Profile
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: "black",
+        backgroundColor: "red",
     }
 })

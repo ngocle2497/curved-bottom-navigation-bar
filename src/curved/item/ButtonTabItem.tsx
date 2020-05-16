@@ -1,38 +1,36 @@
 import React, { memo, useMemo, useCallback } from 'react'
 import { View } from 'react-native'
-import { equals } from 'ramda'
+import equals from 'react-fast-compare'
 import { styles } from './style'
 import { createNativeWrapper, TouchableWithoutFeedback, State } from 'react-native-gesture-handler';
-import Animated, { eq, cond, interpolate, useCode, set, and } from 'react-native-reanimated';
-import { onGestureEvent, useValues, withTransition, round } from 'react-native-redash';
+import Animated, { eq, cond, interpolate, useCode, set, and, not, clockRunning } from 'react-native-reanimated';
+import { onGestureEvent, useValues, withTimingTransition, round } from 'react-native-redash';
 import { TabBarItemProps } from '../../types';
 
 const AnimatedRawButton = createNativeWrapper(
     Animated.createAnimatedComponent(TouchableWithoutFeedback),
     {
-        shouldCancelWhenOutside: false,
-        shouldActivateOnStart: false,
+        shouldCancelWhenOutside: true,
+        shouldActivateOnStart: true,
     }
 );
 const gestureHandler = (state: Animated.Value<State>) =>
     onGestureEvent({ state });
 
 const ButtonTabItemComponent = (props: TabBarItemProps) => {
-    const { index, selectedIndex, countTab, indexAnimated, width, icon } = props;
+    const { index, selectedIndex, countTab, indexAnimated, width, icon, clock } = props;
     const isActive = eq(round(indexAnimated), index)
-    const progress = withTransition(isActive, { duration: 200 })
-    const [state] = useValues([State.UNDETERMINED], [index]);
-
+    const progress = withTimingTransition(isActive, { duration: 200 })
+    const [state] = useValues([State.UNDETERMINED], []);
     // effect
     useCode(
         () =>
-            cond(and(eq(indexAnimated, selectedIndex), eq(progress, 0), eq(state, State.END)), [
+            cond(and(eq(indexAnimated, selectedIndex),not(clockRunning(clock)), eq(state, State.END)), [
                 set(selectedIndex, index),
                 set(state, State.UNDETERMINED),
             ]),
-        [selectedIndex, state, index, indexAnimated]
+        [state]
     );
-
     // style
     const containerIconStyle = [{
 
@@ -61,7 +59,7 @@ const ButtonTabItemComponent = (props: TabBarItemProps) => {
             return icon({ progress: progress })
         },
         [props],
-    ) 
+    )
     return (
         <AnimatedRawButton {...gestureHandler(state)}>
             <View style={buttonTab}>

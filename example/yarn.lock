@@ -2137,13 +2137,13 @@ csstype@^2.2.0:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.10.tgz#e63af50e66d7c266edb6b32909cfd0aabe03928b"
   integrity sha512-D34BqZU4cIlMCY93rZHbrq9pjTAQJ3U8S8rfBqjwHxkGPThWFjzZDQpgMJY0QViLxth6ZKYiwFBo14RdN44U/w==
 
-curved-bottom-navigation-bar@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/curved-bottom-navigation-bar/-/curved-bottom-navigation-bar-0.8.0.tgz#1023dd726b5af9badb95d45700226b8c87736d5f"
-  integrity sha512-ueWCNs2xNyiBle/Vz+ojWzZxnGCjXzPBpZcbs22fAXzkpZLIC3XEtw0cCzsJOlM+XhNK8pvaWHP74KPjAdsGGg==
+curved-bottom-navigation-bar@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/curved-bottom-navigation-bar/-/curved-bottom-navigation-bar-1.0.5.tgz#49d0e2471b8014f9cd5158e80c65e3d283031bf6"
+  integrity sha512-nZnPm1pEohrwYoWVbuOpmdtPTfStVpHz87UN4tsTFHv1yNItrAiIIDG8rRsYDjMc2NhMpoOBBgMLYV0ikz8dLg==
   dependencies:
-    ramda "^0.27.0"
-    react-native-redash "^10.0.1"
+    react-fast-compare "3.1.1"
+    react-native-redash "12.0.4"
 
 dashdash@^1.12.0:
   version "1.14.1"
@@ -5232,11 +5232,6 @@ query-string@^6.12.0:
     split-on-first "^1.0.0"
     strict-uri-encode "^2.0.0"
 
-ramda@^0.27.0:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.27.0.tgz#915dc29865c0800bf3f69b8fd6c279898b59de43"
-  integrity sha512-pVzZdDpWwWqEVVLshWUHjNwuVP7SfcmPraYuqocJp1yo2U1R7P+5QAfDhdItkuoGqIBnBYrtPp7rEPqDn9HlZA==
-
 range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
@@ -5249,6 +5244,11 @@ react-devtools-core@^4.0.6:
   dependencies:
     shell-quote "^1.6.1"
     ws "^7"
+
+react-fast-compare@3.1.1, react-fast-compare@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.1.1.tgz#0becf31e3812fa70dc231e259f40d892d4767900"
+  integrity sha512-SCsAORWK59BvauR2L1BTdjQbJcSGJJz03U0awektk2hshLKrITDDFTlgGCqIZpTDlPC/NFlZee6xTMzXPVLiHw==
 
 react-is@^16.12.0, react-is@^16.13.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   version "16.13.1"
@@ -5277,10 +5277,10 @@ react-native-reanimated@^1.8.0:
   dependencies:
     fbjs "^1.0.0"
 
-react-native-redash@^10.0.1:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-redash/-/react-native-redash-10.1.1.tgz#228564f2a9cee2406b8f87b1c90c2fdf7d81cdfb"
-  integrity sha512-VxyKygf//IzDgJfK5oFK0KYSaxxpuXwwVE2rldtINRByuCIZIUx8QVE3pmxG7XYc15T4OHC3l7wug+tLsLI44w==
+react-native-redash@12.0.4:
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-redash/-/react-native-redash-12.0.4.tgz#803c40567a68b2a10d9e1e5ca1e2235646761c97"
+  integrity sha512-W+J2lVX3LZKVX+FuOgOmT7ICDIGiGUHnc8zIQOlEMxFR0gC/ESyzfbkv6JPaBwrsM9Nb0iBHqfMxfY7702JMwA==
   dependencies:
     abs-svg-path "^0.1.1"
     normalize-svg-path "^1.0.1"

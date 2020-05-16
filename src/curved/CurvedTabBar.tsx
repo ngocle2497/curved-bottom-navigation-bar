@@ -7,10 +7,10 @@ import Dot from './item/Dot';
 import { TabBarViewProps } from '../types'
 
 import { useSafeArea } from 'react-native-safe-area-context';
-import Animated, { set, useCode, interpolate, eq } from 'react-native-reanimated';
-import { useValues, timing, withTimingTransition } from 'react-native-redash'
+import Animated, { set, useCode, interpolate, eq, cond, not } from 'react-native-reanimated';
+import { useValues, timing, withTimingTransition, useClocks } from 'react-native-redash'
 
-import { equals } from 'ramda'
+import equals from 'react-fast-compare'
 
 import { styles } from './style'
 import { HEIGHT_HOLE } from './constant';
@@ -22,7 +22,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
     // props
     const { routes,
         selectedIndex,
-        sizeDot: SIZE_DOT,
+        dotSize: SIZE_DOT,
         barHeight: TAB_BAR_HEIGHT,
         duration,
         dotColor,
@@ -30,10 +30,11 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
 
     const [width, setWidth] = useState(Dimensions.get('window').width)
     const safeArea = useSafeArea()
+    const [clock] = useClocks(1, [])
     const widthTab = useMemo(() => width / routes.length, [routes, width])
 
     // animated
-    const [indexAnimated] = useValues([0, 0], [])
+    const [indexAnimated] = useValues([0], [])
     const progress = withTimingTransition(eq(indexAnimated, selectedIndex), { duration: 150, })
 
     // path
@@ -76,12 +77,13 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
         styles.bottomView,
         {
             height: safeArea.bottom,
-            width: width, backgroundColor: tabBarColor,
+            width: width,
+            backgroundColor: tabBarColor,
         }],
-        [safeArea, width])
+        [safeArea, width, tabBarColor])
 
     // effect
-    useCode(() => set(indexAnimated, timing({ to: selectedIndex, from: indexAnimated, duration: duration })), [selectedIndex])
+    useCode(() => cond(not(eq(indexAnimated, selectedIndex)), set(indexAnimated, timing({ to: selectedIndex, clock: clock, from: indexAnimated, duration: duration }))), [selectedIndex])
     useEffect(() => {
         const handler = () => {
             setWidth(Dimensions.get('window').width)
@@ -96,15 +98,15 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
             <View style={containerStyle}>
                 <AnimatedSvg width={width * 2} height={TAB_BAR_HEIGHT} style={svgStyle}>
                     <Path d={`${d}`} fill={tabBarColor} stroke={'transparent'} strokeWidth={1} />
-                    {/* <Path d={dFill} fill={tabBarColor} stroke={'transparent'} strokeWidth={1} /> */}
                 </AnimatedSvg>
             </View>
             <View style={rowTab} >
-                <Dot dotColor={dotColor} sizeDot={SIZE_DOT} barHeight={TAB_BAR_HEIGHT} width={width} selectedIndex={indexAnimated} routes={routes} progress={progress} />
+                <Dot dotColor={dotColor} dotSize={SIZE_DOT} barHeight={TAB_BAR_HEIGHT} width={width} selectedIndex={indexAnimated} routes={routes} progress={progress} />
                 {routes.map(({ key, ...configs }, index) => {
                     return <ButtonTabItem
                         width={width}
                         key={key}
+                        clock={clock}
                         indexAnimated={indexAnimated}
                         countTab={routes.length}
                         selectedIndex={selectedIndex}

@@ -1,6 +1,6 @@
 {
   "name": "curved-bottom-navigation-bar",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "Hight performance animated bottom navigation bar for both Android and IOS",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -38,8 +38,8 @@
   },
   "homepage": "https://github.com/hngocl/curved-bottom-navigation-bar#readme",
   "dependencies": {
-    "ramda": "^0.27.0",
-    "react-native-redash": "^10.0.1"
+    "react-fast-compare": "3.1.1",
+    "react-native-redash": "12.0.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
@@ -50,7 +50,6 @@
     "@react-navigation/native": "^5.0.9",
     "@react-navigation/stack": "^5.1.1",
     "@release-it/conventional-changelog": "^1.1.0",
-    "@types/ramda": "^0.27.4",
     "@types/react": "^16.9.19",
     "@types/react-native": "0.61.10",
     "auto-changelog": "^1.16.2",

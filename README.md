@@ -148,7 +148,7 @@ export default AnimatedIcon;
 | duration       | NO       | 500                              | Duration for the tabs animation.                                            |
 | barColor         | NO       | #FFFFFF           | background color of bottom bar.              |
 | tabs           | YES      |                                  | A dictionary for all tabs configurations, check `TabConfigsType` interface. |
-| sizeDot          | NO       | 60     | Size of dot.                        |
+| dotSize          | NO       | 60     | Size of dot.                        |
 | dotColor | NO       | #FFFFFF | Color of dot.                                        |
 
 ### TabConfigsType

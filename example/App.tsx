@@ -24,7 +24,7 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator
           tabBar={props => (
-            <AnimatedTabBar tabs={tabs} {...props} />
+            <AnimatedTabBar barColor={'green'} tabs={tabs} {...props} />
           )}
         >
           <Tab.Screen

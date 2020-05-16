@@ -42,7 +42,7 @@ export interface TabBarViewProps
     /**
      * @default 60
      */
-    sizeDot: number;
+    dotSize: number;
     /**
      * Dot Color.
      * @default #FFFFFF
@@ -65,6 +65,8 @@ export interface TabBarItemProps extends TabConfigsType {
 
     indexAnimated: Animated.Node<number>;
 
+    clock:Animated.Clock;
+
     width: number;
 }
 export interface DotProps {
@@ -83,7 +85,7 @@ export interface DotProps {
     /**
      * @default 60
      */
-    sizeDot: number;
+    dotSize: number;
 
     dotColor: string;
 

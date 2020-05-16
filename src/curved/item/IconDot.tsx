@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { equals } from 'ramda'
+import equals from 'react-fast-compare'
 import Animated, { eq, interpolate } from 'react-native-reanimated'
 import { withTransition } from 'react-native-redash'
 

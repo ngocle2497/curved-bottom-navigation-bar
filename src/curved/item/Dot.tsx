@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { equals } from 'ramda'
+import equals from 'react-fast-compare'
 import Animated, { interpolate } from 'react-native-reanimated'
 import { styles } from './style'
 import { DotProps } from '../../types'
@@ -8,11 +8,11 @@ import { HEIGHT_HOLE } from '../constant'
 
 
 const DotComponent = (props: DotProps) => {
-    const { selectedIndex, routes, progress, width,dotColor, sizeDot, barHeight } = props;
+    const { selectedIndex, routes, progress, width,dotColor, dotSize, barHeight } = props;
     const translateX = interpolate(selectedIndex, {
         inputRange: routes.map((item: any, index: number) => index),
         outputRange: routes.map((item: any, index: number) =>
-            (index * width / routes.length) + (width / routes.length) / 2 - (sizeDot / 2))
+            (index * width / routes.length) + (width / routes.length) / 2 - (dotSize / 2))
     })
     const translateY = interpolate(progress, {
         inputRange: [0, 1],
@@ -32,11 +32,11 @@ const DotComponent = (props: DotProps) => {
     const dotStyle = [
         styles.dot,
         {
-            width: sizeDot,
+            width: dotSize,
             backgroundColor: dotColor,
-            height: sizeDot,
+            height: dotSize,
             bottom: 0,
-            borderRadius: sizeDot / 2,
+            borderRadius: dotSize / 2,
             transform: [{ translateX: translateX }, { translateY }]
         }
     ]
