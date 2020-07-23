@@ -35,7 +35,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
 
     // animated
     const [indexAnimated] = useValues([0], [])
-    const progress = withTimingTransition(eq(indexAnimated, selectedIndex), { duration: 150, })
+    const progress = withTimingTransition(eq(selectedIndex, indexAnimated), { duration: 150, })
 
     // path
     const d = useMemo(() =>
@@ -43,7 +43,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
     C${width + widthTab / 2 - SIZE_DOT * 0.5},0 ${width + widthTab / 2 - SIZE_DOT * 0.75},${HEIGHT_HOLE} ${width + widthTab / 2},${HEIGHT_HOLE} 
     C${width + widthTab / 2 + SIZE_DOT * 0.75},${HEIGHT_HOLE} ${width + widthTab / 2 + SIZE_DOT * 0.5},0 ${width + widthTab / 2 + SIZE_DOT} 0 
     L${width * 2},0 L ${width * 2},${TAB_BAR_HEIGHT} L 0,${TAB_BAR_HEIGHT} Z
-    `, [width, SIZE_DOT, TAB_BAR_HEIGHT, routes, safeArea])
+    `, [width, SIZE_DOT, TAB_BAR_HEIGHT, routes, safeArea]);
 
     // style
     const containerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -67,13 +67,13 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
                 })
             }]
         }
-    ]
+    ] as StyleProp<ViewStyle>
     const rowTab = useMemo(() => [
         styles.rowTab,
         { bottom: safeArea.bottom, width: width, height: TAB_BAR_HEIGHT }
     ], [safeArea, TAB_BAR_HEIGHT, width])
 
-    const bottomView = useMemo(() => [
+    const bottomView = useMemo<StyleProp<ViewStyle>>(() => [
         styles.bottomView,
         {
             height: safeArea.bottom,

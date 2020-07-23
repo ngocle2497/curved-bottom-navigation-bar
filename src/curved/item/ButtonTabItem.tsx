@@ -2,13 +2,13 @@ import React, { memo, useMemo, useCallback } from 'react'
 import { View } from 'react-native'
 import equals from 'react-fast-compare'
 import { styles } from './style'
-import { createNativeWrapper, TouchableWithoutFeedback, State } from 'react-native-gesture-handler';
-import Animated, { eq, cond, interpolate, useCode, set, and, not, clockRunning } from 'react-native-reanimated';
-import { onGestureEvent, useValues, withTimingTransition, round } from 'react-native-redash';
+import { createNativeWrapper, TouchableOpacity, State } from 'react-native-gesture-handler';
+import Animated, { eq, cond, interpolate, useCode, set, and, not,round, clockRunning } from 'react-native-reanimated';
+import { onGestureEvent, useValues, withTimingTransition } from 'react-native-redash';
 import { TabBarItemProps } from '../../types';
 
 const AnimatedRawButton = createNativeWrapper(
-    Animated.createAnimatedComponent(TouchableWithoutFeedback),
+    Animated.createAnimatedComponent(TouchableOpacity),
     {
         shouldCancelWhenOutside: true,
         shouldActivateOnStart: true,

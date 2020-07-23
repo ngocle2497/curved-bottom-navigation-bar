@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import Animated, { useCode, call, set } from 'react-native-reanimated';
 import { useValues } from 'react-native-redash';
 import { CommonActions, Route } from '@react-navigation/native';
@@ -126,6 +126,17 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
 
   //#region Effects
   /**
+ * @DEV
+ * here we listen to selectedIndex and call `handleSelectedIndexChange`
+ */
+  useCode(
+    () =>
+      call([selectedIndex], args => {
+        handleSelectedIndexChange(args[0]);
+      }),
+    [selectedIndex]
+  );
+  /**
    * @DEV
    * here we listen to React Navigation index and update
    * selectedIndex value.
@@ -135,17 +146,6 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
     set(selectedIndex, navigationIndex)
     , [navigationIndex]);
 
-  /**
-   * @DEV
-   * here we listen to selectedIndex and call `handleSelectedIndexChange`
-   */
-  useCode(
-    () =>
-      call([selectedIndex], args => {
-        handleSelectedIndexChange(args[0]);
-      }),
-    [selectedIndex]
-  );
   //#endregion
 
   // render
