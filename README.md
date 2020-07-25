@@ -4,7 +4,7 @@
 
 <img src="./preview.gif">
 
-Hight performance animated bottom navigation bar for both Android and IOS 😎 with react navigation v4/v5.
+High performance animated bottom navigation bar for both Android and IOS 😎 with react navigation v4/v5.
 
 </div>
 
