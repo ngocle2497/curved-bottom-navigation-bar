@@ -1,26 +1,41 @@
-import React, { memo } from 'react'
-import equals from 'react-fast-compare'
-import Animated, { eq, interpolate } from 'react-native-reanimated'
-import { withTransition } from 'react-native-redash'
+import React, { memo } from 'react';
+import isEqual from 'react-fast-compare';
+import Animated, {
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
+
+import { sharedTiming, useInterpolate } from '../../AnimatedHelper';
 
 interface IconDotProps {
-    index: number;
-    selectedIndex: Animated.Node<number>;
-    children: React.ReactNode;
+  index: number;
+  selectedIndex: Animated.SharedValue<number>;
+  children: React.ReactNode;
 }
 
 const IconDotComponent = (props: IconDotProps) => {
-    const { index, selectedIndex, children } = props;
-    const progress = withTransition(eq(selectedIndex, index),{duration: 200})
-    const opacity = interpolate(progress, {
-        inputRange: [0, 0.6, 1],
-        outputRange: [0, 0, 1]
-    })
-    return (
-        <Animated.View style={{ position: 'absolute',opacity }}>
-            {children}
-        </Animated.View>
-    )
-}
+  // props
+  const { index, selectedIndex, children } = props;
 
-export const IconDot = memo(IconDotComponent, (prevProps, nextProps) => equals(prevProps, nextProps))
+  // reanimated
+  const progress = useSharedValue(0);
+  useAnimatedReaction(
+    () => selectedIndex.value === index,
+    (result) => {
+      progress.value = sharedTiming(result ? 1 : 0);
+    }
+  );
+  const opacity = useInterpolate(progress, [0, 0.6, 1], [0, 0, 1]);
+
+  // reanimated style
+  const style = useAnimatedStyle(() => ({
+    position: 'absolute',
+    opacity: opacity.value,
+  }));
+
+  // render
+  return <Animated.View style={[style]}>{children}</Animated.View>;
+};
+
+export const IconDot = memo(IconDotComponent, isEqual);

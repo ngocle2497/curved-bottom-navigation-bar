@@ -1,93 +1,97 @@
-import Animated from 'react-native-reanimated';
+/* eslint-disable no-undef */
+import type Animated from 'react-native-reanimated';
 export interface TabConfigsType {
-    icon:
-    ((props: {
-        progress: Animated.Node<number>;
-    }) => React.ReactNode)
+  icon: (props: { progress: Animated.SharedValue<number> }) => React.ReactNode;
+  renderTitle?: (props: {
+    progress: Animated.SharedValue<number>;
+    title: string;
+  }) => React.ReactNode;
 }
 
 export interface TabsConfigsType {
-    [key: string]: TabConfigsType;
+  [key: string]: TabConfigsType;
 }
 
 export interface TabBarAnimationConfigurableProps {
-    /**
-     * Animation duration.
-     * @default 500
-     */
-    duration?: number;
+  /**
+   * Animation duration.
+   * @default 500
+   */
+  duration?: number;
 }
-
 
 interface TabRoute extends TabConfigsType {
-    key: string;
+  key: string;
+  title: string;
 }
 
-export interface TabBarViewProps
-    extends TabBarAnimationConfigurableProps {
-    /**
-     * Selected animated index.
-     */
-    selectedIndex: Animated.Value<number>;
-    /**
-     * Mapped routes with tab configs to be presented.
-     */
-    routes: TabRoute[];
-    /**
-     * TabBarColor.
-     * @default #FFFFFF
-     */
-    tabBarColor: string;
+export interface TabBarViewProps extends TabBarAnimationConfigurableProps {
+  /**
+   * Selected animated index.
+   */
+  selectedIndex: Animated.SharedValue<number>;
+  /**
+   * Mapped routes with tab configs to be presented.
+   */
+  routes: TabRoute[];
+  /**
+   * TabBarColor.
+   * @default #FFFFFF
+   */
+  tabBarColor: string;
 
-    /**
-     * @default 60
-     */
-    dotSize: number;
-    /**
-     * Dot Color.
-     * @default #FFFFFF
-     */
-    dotColor: string;
+  /**
+   * @default 60
+   */
+  dotSize: number;
+  /**
+   * Dot Color.
+   * @default #FFFFFF
+   */
+  dotColor: string;
 
-    barHeight: number;
+  barHeight: number;
 
+  titleShown: boolean;
 }
 
-export interface TabBarItemProps extends TabConfigsType {
-    /**
-     * Selected animated index.
-     */
-    selectedIndex: Animated.Value<number>;
+export interface TabBarItemProps
+  extends TabConfigsType,
+    Pick<TabBarViewProps, 'titleShown'> {
+  /**
+   * Selected animated index.
+   */
+  selectedIndex: Animated.SharedValue<number>;
 
-    index: number;
+  index: number;
 
-    countTab: number;
+  countTab: number;
 
-    indexAnimated: Animated.Node<number>;
+  indexAnimated: Animated.SharedValue<number>;
 
-    clock:Animated.Clock;
+  width: number;
 
-    width: number;
+  title?: string;
 }
 export interface DotProps {
-    /**
- * Selected animated index.
- */
-    selectedIndex: Animated.Value<number>;
-    /**
- * Mapped routes with tab configs to be presented.
- */
-    routes: TabRoute[];
+  /**
+   * Selected animated index.
+   */
+  selectedIndex: Animated.SharedValue<number>;
+  /**
+   * Mapped routes with tab configs to be presented.
+   */
+  routes: TabRoute[];
 
-    progress: Animated.Node<number>;
+  progress: Animated.SharedValue<number>;
 
-    width: number;
-    /**
-     * @default 60
-     */
-    dotSize: number;
+  width: number;
+  /**
+   * @default 60
+   */
+  dotSize: number;
 
-    dotColor: string;
+  dotColor: string;
 
-    barHeight: number;
+  barHeight: number;
 }

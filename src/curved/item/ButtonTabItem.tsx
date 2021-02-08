@@ -1,75 +1,103 @@
-import React, { memo, useMemo, useCallback } from 'react'
-import { View } from 'react-native'
-import equals from 'react-fast-compare'
-import { styles } from './style'
-import { createNativeWrapper, TouchableOpacity, State } from 'react-native-gesture-handler';
-import Animated, { eq, cond, interpolate, useCode, set, and, not,round, clockRunning } from 'react-native-reanimated';
-import { onGestureEvent, useValues, withTimingTransition } from 'react-native-redash';
-import { TabBarItemProps } from '../../types';
+import React, { memo, useMemo, useCallback } from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import Animated, {
+  useDerivedValue,
+  useAnimatedStyle,
+  useAnimatedReaction,
+  useSharedValue,
+} from 'react-native-reanimated';
+import isEqual from 'react-fast-compare';
 
-const AnimatedRawButton = createNativeWrapper(
-    Animated.createAnimatedComponent(TouchableOpacity),
-    {
-        shouldCancelWhenOutside: true,
-        shouldActivateOnStart: true,
-    }
-);
-const gestureHandler = (state: Animated.Value<State>) =>
-    onGestureEvent({ state });
+import type { TabBarItemProps } from '../../types';
+import {
+  sharedRound,
+  sharedTiming,
+  useInterpolate,
+} from '../../AnimatedHelper';
+
+import { styles } from './style';
 
 const ButtonTabItemComponent = (props: TabBarItemProps) => {
-    const { index, selectedIndex, countTab, indexAnimated, width, icon, clock } = props;
-    const isActive = eq(round(indexAnimated), index)
-    const progress = withTimingTransition(isActive, { duration: 200 })
-    const [state] = useValues([State.UNDETERMINED], []);
-    // effect
-    useCode(
-        () =>
-            cond(and(eq(indexAnimated, selectedIndex),not(clockRunning(clock)), eq(state, State.END)), [
-                set(selectedIndex, index),
-                set(state, State.UNDETERMINED),
-            ]),
-        [state]
-    );
-    // style
-    const containerIconStyle = [{
-
-        opacity: interpolate(progress, {
-            inputRange: [0, 1],
-            outputRange: [1, 0]
-        }),
-        transform: [{
-            translateY: interpolate(progress, {
-                inputRange: [0, 1],
-                outputRange: [0, 50]
-            })
-        }]
+  // props
+  const {
+    index,
+    selectedIndex,
+    countTab,
+    indexAnimated,
+    width,
+    icon,
+    renderTitle,
+    title,
+    titleShown,
+  } = props;
+  // reanimated
+  const isActive = useDerivedValue(() => sharedRound(indexAnimated.value));
+  const progress = useSharedValue(0);
+  useAnimatedReaction(
+    () => isActive.value === index,
+    (result) => {
+      progress.value = sharedTiming(result ? 1 : 0);
     }
-    ]
-    const buttonTab = useMemo(() => [
-        styles.buttonTab,
-        {
-            width: width / countTab,
-        }
-    ], [width, countTab])
+  );
 
-    // render
-    const renderIcon = useCallback(
-        () => {
-            return icon({ progress: progress })
-        },
-        [props],
-    )
-    return (
-        <AnimatedRawButton {...gestureHandler(state)}>
-            <View style={buttonTab}>
-                <Animated.View style={containerIconStyle}>
-                    {renderIcon()}
-                </Animated.View>
-            </View>
-        </AnimatedRawButton>
-    )
-}
+  const opacity = useInterpolate(progress, [0, 0.8], [1, 0]);
+  const translateY = useInterpolate(progress, [0, 0.4], [0, 50]);
+  const scale = useInterpolate(progress, [0, 1], [1, 0.7]);
 
-const ButtonTab = memo(ButtonTabItemComponent, (prevProps, nextProps) => equals(prevProps, nextProps))
-export default ButtonTab
+  const _onPress = useCallback(() => {
+    selectedIndex.value = index;
+  }, [index, selectedIndex]);
+
+  // reanimated style
+  const containerIconStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    justifyContent: 'center',
+    alignItems: 'center',
+    transform: [
+      {
+        translateY: translateY.value,
+      },
+    ],
+  }));
+  const titleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+  const buttonTab = useMemo(
+    () => ({
+      width: width / countTab,
+    }),
+    [width, countTab]
+  );
+
+  // render
+  const renderIcon = useCallback(() => {
+    return icon({ progress: progress });
+  }, [icon, progress]);
+  const _renderTitle = useCallback(() => {
+    return renderTitle?.({ progress: progress, title: title ?? '' });
+  }, [progress, renderTitle, title]);
+
+  return (
+    <TouchableOpacity onPress={_onPress} activeOpacity={0.7}>
+      <View style={[styles.buttonTab, buttonTab]}>
+        <Animated.View style={[containerIconStyle]}>
+          {renderIcon()}
+          {titleShown &&
+            (renderTitle ? (
+              _renderTitle()
+            ) : (
+              <Animated.Text
+                style={[styles.title, titleStyle]}
+                allowFontScaling={false}
+                numberOfLines={1}
+              >
+                {title ?? ''}
+              </Animated.Text>
+            ))}
+        </Animated.View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export const ButtonTab = memo(ButtonTabItemComponent, isEqual);

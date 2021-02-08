@@ -1,14 +1,24 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
-import Animated, { useCode, call, set } from 'react-native-reanimated';
-import { useValues } from 'react-native-redash';
+import React, { useMemo, useCallback, useEffect, memo } from 'react';
+import Animated, {
+  useSharedValue,
+  runOnJS,
+  useAnimatedReaction,
+} from 'react-native-reanimated';
 import { CommonActions, Route } from '@react-navigation/native';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import {
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import isEqual from 'react-fast-compare';
+
+import type {
   TabsConfigsType,
   TabBarAnimationConfigurableProps,
 } from './types';
-import CurvedTabBar from './curved/CurvedTabBar'
-import { SIZE_DOT, TAB_BAR_COLOR, DEFAULT_ITEM_ANIMATION_DURATION, TAB_BAR_HEIGHT } from './curved/constant';
+import { CurvedTabBar } from './curved/CurvedTabBar';
+import {
+  SIZE_DOT,
+  TAB_BAR_COLOR,
+  DEFAULT_ITEM_ANIMATION_DURATION,
+  TAB_BAR_HEIGHT,
+} from './curved/constant';
 Animated.addWhitelistedNativeProps({
   width: true,
   stroke: true,
@@ -17,21 +27,35 @@ Animated.addWhitelistedNativeProps({
 
 interface AnimatedTabBarProps
   extends Pick<BottomTabBarProps, 'state' | 'navigation' | 'descriptors'>,
-  TabBarAnimationConfigurableProps {
+    TabBarAnimationConfigurableProps {
   /**
    * Tabs configurations.
    */
   tabs: TabsConfigsType;
 
+  /**
+   * Overwrite background color of tabbar
+   */
   barColor?: string;
 
+  /**
+   * Overwrite radius of dot
+   */
   dotSize?: number;
 
+  /**
+   * Custom dot color
+   */
   dotColor?: string;
 
+  /**
+   * Show title or not
+   * @default false
+   */
+  titleShown?: boolean;
 }
 
-export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
+const AnimatedTabBarComponent = (props: AnimatedTabBarProps) => {
   // props
   const {
     navigation,
@@ -41,41 +65,47 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
     barColor = TAB_BAR_COLOR,
     dotSize = SIZE_DOT,
     dotColor = TAB_BAR_COLOR,
+    titleShown = false,
+    state,
   } = props;
 
   // variables
-  const isReactNavigation5 = props.state ? true : false;
-  // @ts-ignore
+  const isReactNavigation5 = useMemo(() => (state ? true : false), [state]);
   const {
     routes,
     index: navigationIndex,
     key: navigationKey,
   }: { routes: Route<string>[]; index: number; key: string } = useMemo(() => {
     if (isReactNavigation5) {
-      return props.state;
+      return state;
     } else {
       return {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        index: props.navigation.state.index,
+        index: navigation.state.index,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        routes: props.navigation.state.routes,
+        routes: navigation.state.routes,
         key: '',
       };
     }
-  }, [props, isReactNavigation5]);
-  const [selectedIndex] = useValues([0], []);
+  }, [navigation, state, isReactNavigation5]);
 
-  //#region callbacks
+  // reanimated
+  const selectedIndex = useSharedValue(0);
+
+  // callbacks
   const getRouteTitle = useCallback(
     (route: Route<string>) => {
       if (isReactNavigation5) {
         const { options } = descriptors[route.key];
+        // eslint-disable-next-line no-nested-ternary
         return options.tabBarLabel !== undefined &&
           typeof options.tabBarLabel === 'string'
           ? options.tabBarLabel
           : options.title !== undefined
-            ? options.title
-            : route.name;
+          ? options.title
+          : route.name;
       } else {
         return route.key;
       }
@@ -95,62 +125,58 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
   );
 
   const getRoutes = useCallback(() => {
-    return routes.map(route => ({
+    return routes.map((route) => ({
       key: route.key,
+      title: getRouteTitle(route),
       ...getRouteTabConfigs(route),
     }));
   }, [routes, getRouteTitle, getRouteTabConfigs]);
 
-  const handleSelectedIndexChange = (index: number) => {
-    if (isReactNavigation5) {
-      const { key, name } = routes[index];
-      const event = navigation.emit({
-        type: 'tabPress',
-        target: key,
-        canPreventDefault: true,
-      });
-
-      if (!event.defaultPrevented) {
-        navigation.dispatch({
-          ...CommonActions.navigate(name),
-          target: navigationKey,
+  const handleSelectedIndexChange = useCallback(
+    (index: number) => {
+      if (isReactNavigation5) {
+        const { key, name } = routes[index];
+        const event = navigation.emit({
+          type: 'tabPress',
+          target: key,
+          canPreventDefault: true,
         });
+
+        if (!event.defaultPrevented) {
+          navigation.dispatch({
+            ...CommonActions.navigate(name),
+            target: navigationKey,
+          });
+        }
+      } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const { onTabPress } = props;
+        onTabPress({ route: routes[index] });
       }
-    } else {
-      // @ts-ignore
-      const { onTabPress } = props;
-      onTabPress({ route: routes[index] });
-    }
-  };
-  //#endregion
-
-  //#region Effects
-  /**
- * @DEV
- * here we listen to selectedIndex and call `handleSelectedIndexChange`
- */
-  useCode(
-    () =>
-      call([selectedIndex], args => {
-        handleSelectedIndexChange(args[0]);
-      }),
-    [selectedIndex]
+    },
+    [isReactNavigation5, routes, navigation, navigationKey, props]
   );
-  /**
-   * @DEV
-   * here we listen to React Navigation index and update
-   * selectedIndex value.
-   */
-  useCode(() =>
-    // @ts-ignore
-    set(selectedIndex, navigationIndex)
-    , [navigationIndex]);
 
-  //#endregion
+  // Effects
+
+  useEffect(() => {
+    selectedIndex.value = navigationIndex;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigationIndex]);
+
+  useAnimatedReaction(
+    () => selectedIndex.value,
+    (nextSelected) => {
+      runOnJS(handleSelectedIndexChange)(nextSelected);
+    },
+    [selectedIndex, handleSelectedIndexChange]
+  );
 
   // render
   return (
     <CurvedTabBar
+      titleShown={titleShown}
       dotColor={dotColor}
       barHeight={TAB_BAR_HEIGHT}
       dotSize={dotSize}
@@ -161,3 +187,4 @@ export const AnimatedTabBar = (props: AnimatedTabBarProps) => {
     />
   );
 };
+export const AnimatedTabBar = memo(AnimatedTabBarComponent, isEqual);
