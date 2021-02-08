@@ -1,6 +1,6 @@
 {
   "name": "curved-bottom-navigation-bar",
-  "version": "1.0.11",
+  "version": "2.0.1",
   "description": "Hight performance animated bottom navigation bar for both Android and IOS",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -79,12 +79,6 @@
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": ">=3.1.9",
     "react-native-svg": ">=12.1.0"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn typescript"
-    }
   },
   "react-native-builder-bob": {
     "source": "src",
