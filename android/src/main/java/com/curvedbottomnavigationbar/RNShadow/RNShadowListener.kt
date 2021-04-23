@@ -70,7 +70,7 @@ class RNShadowListener(private val reactContext: ReactContext) : EventDispatcher
   }
 
   init {
-    eventDispatcher = reactContext.getNativeModule(UIManagerModule::class.java).eventDispatcher
-    eventDispatcher.addListener(this)
+    eventDispatcher = reactContext.getNativeModule(UIManagerModule::class.java)!!.eventDispatcher
+    eventDispatcher?.addListener(this)
   }
 }
