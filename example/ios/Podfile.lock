@@ -2,7 +2,7 @@ PODS:
   - boost-for-react-native (1.63.0)
   - CocoaAsyncSocket (7.6.4)
   - CocoaLibEvent (1.0.0)
-  - curved-bottom-navigation-bar (1.0.11):
+  - curved-bottom-navigation-bar (2.0.2):
     - React-Core
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.63.4)
@@ -479,7 +479,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
-  curved-bottom-navigation-bar: 062b593a48b85ae06f8736d916815b38c2c1014b
+  curved-bottom-navigation-bar: 6d7e41d935781431d24e60ebb282ee67316bdba3
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
   FBReactNativeSpec: f2c97f2529dd79c083355182cc158c9f98f4bd6e
@@ -523,4 +523,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 62dde142834491b9383f67f468f603c953f5bf44
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

@@ -1,6 +1,6 @@
 {
   "name": "curved-bottom-navigation-bar",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Hight performance animated bottom navigation bar for both Android and IOS",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -65,9 +65,9 @@
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-builder-bob": "^0.17.1",
-    "react-native-reanimated": "2.0.0-rc.3",
-    "react-native-safe-area-context": "^3.1.9",
-    "react-native-svg": "^12.1.0",
+    "react-native-reanimated": "2.1.0",
+    "react-native-safe-area-context": "^3.2.9",
+    "react-native-svg": "^12.1.1",
     "release-it": "^14.2.2",
     "typescript": "^4.1.3"
   },
