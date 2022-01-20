@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { memo, useMemo } from 'react';
-import { View, ViewStyle, StyleProp, useWindowDimensions } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, {memo, useMemo} from 'react';
+import {View, ViewStyle, StyleProp, useWindowDimensions} from 'react-native';
+import Svg, {Path} from 'react-native-svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Animated, {
   useDerivedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import isEqual from 'react-fast-compare';
 
-import type { TabBarViewProps } from '../types';
+import type {TabBarViewProps} from '../types';
 import {
   sharedTiming,
   useInterpolate,
@@ -17,11 +17,11 @@ import {
   withSharedTransition,
 } from '../AnimatedHelper';
 
-import { Dot } from './item/Dot';
-import { ButtonTab } from './item/ButtonTabItem';
-import { styles } from './style';
-import { HEIGHT_HOLE } from './constant';
-import { RNShadow } from '../RNShadow';
+import {Dot} from './item/Dot';
+import {ButtonTab} from './item/ButtonTabItem';
+import {styles} from './style';
+import {HEIGHT_HOLE} from './constant';
+import {RNShadow} from '../RNShadow';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
@@ -39,19 +39,19 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
   } = props;
 
   // state
-  const { width } = useWindowDimensions();
-  const { bottom } = useSafeAreaInsets();
+  const {width} = useWindowDimensions();
+  const {bottom} = useSafeAreaInsets();
   const widthTab = useMemo(() => width / routes.length, [routes, width]);
 
   // reanimated
   const indexAnimated = useDerivedValue(() =>
-    sharedTiming(selectedIndex.value, { duration })
+    sharedTiming(selectedIndex.value, {duration}),
   );
   const progress = withSharedTransition(sharedEq(selectedIndex, indexAnimated));
 
   const inputRange = useMemo(
     () => routes.map((_: any, index: number) => index),
-    [routes]
+    [routes],
   );
 
   const outputRange = routes
@@ -72,7 +72,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
       },0 ${width + widthTab / 2 + SIZE_DOT} 0 
     L${width * 2},0 L ${width * 2},${TAB_BAR_HEIGHT} L 0,${TAB_BAR_HEIGHT} Z
     `,
-    [width, widthTab, SIZE_DOT, TAB_BAR_HEIGHT]
+    [width, widthTab, SIZE_DOT, TAB_BAR_HEIGHT],
   );
 
   // style
@@ -83,7 +83,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
         bottom: bottom,
       },
     ],
-    [TAB_BAR_HEIGHT, bottom]
+    [TAB_BAR_HEIGHT, bottom],
   );
   const svgStyle = useAnimatedStyle(() => ({
     height: TAB_BAR_HEIGHT,
@@ -94,8 +94,8 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
     ],
   }));
   const rowTab = useMemo(
-    () => [{ bottom: bottom, width: width, height: TAB_BAR_HEIGHT }],
-    [bottom, TAB_BAR_HEIGHT, width]
+    () => [{bottom: bottom, width: width, height: TAB_BAR_HEIGHT}],
+    [bottom, TAB_BAR_HEIGHT, width],
   );
 
   const bottomView = useMemo<StyleProp<ViewStyle>>(
@@ -106,7 +106,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
         backgroundColor: tabBarColor,
       },
     ],
-    [bottom, width, tabBarColor]
+    [bottom, width, tabBarColor],
   );
 
   return (
@@ -115,8 +115,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
         <AnimatedSvg
           width={width * 2}
           height={TAB_BAR_HEIGHT}
-          style={[styles.svg, svgStyle]}
-        >
+          style={[styles.svg, svgStyle]}>
           <Path
             d={`${d}`}
             translateY={3}
@@ -136,7 +135,7 @@ const CurvedTabBarComponent = (props: TabBarViewProps) => {
           routes={routes}
           progress={progress}
         />
-        {routes.map(({ key, title, ...configs }, index) => {
+        {routes.map(({key, title, ...configs}, index) => {
           return (
             <ButtonTab
               width={width}

@@ -1,11 +1,16 @@
 /* eslint-disable no-undef */
 import type Animated from 'react-native-reanimated';
+
+export interface TabIconProps {
+  progress: Animated.SharedValue<number>;
+}
+export interface TabTitleProps {
+  progress: Animated.SharedValue<number>;
+  title: string;
+}
 export interface TabConfigsType {
-  icon: (props: { progress: Animated.SharedValue<number> }) => React.ReactNode;
-  renderTitle?: (props: {
-    progress: Animated.SharedValue<number>;
-    title: string;
-  }) => React.ReactNode;
+  icon: (props: TabIconProps) => React.ReactNode;
+  renderTitle?: (props: TabTitleProps) => React.ReactNode;
 }
 
 export interface TabsConfigsType {

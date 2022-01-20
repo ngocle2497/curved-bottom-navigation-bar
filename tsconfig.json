@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "curved-bottom-navigation-bar": ["./src/index"]
+      "curved-bottom-navigation-bar": ["src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

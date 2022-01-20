@@ -1,18 +1,15 @@
-import React, { useMemo, useCallback, useEffect, memo } from 'react';
+import React, {useMemo, useCallback, useEffect, memo} from 'react';
 import Animated, {
   useSharedValue,
   runOnJS,
   useAnimatedReaction,
 } from 'react-native-reanimated';
-import { CommonActions, Route } from '@react-navigation/native';
-import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import {CommonActions, Route} from '@react-navigation/native';
+import type {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import isEqual from 'react-fast-compare';
 
-import type {
-  TabsConfigsType,
-  TabBarAnimationConfigurableProps,
-} from './types';
-import { CurvedTabBar } from './curved/CurvedTabBar';
+import type {TabsConfigsType, TabBarAnimationConfigurableProps} from './types';
+import {CurvedTabBar} from './curved/CurvedTabBar';
 import {
   SIZE_DOT,
   TAB_BAR_COLOR,
@@ -26,7 +23,7 @@ Animated.addWhitelistedNativeProps({
 });
 
 interface AnimatedTabBarProps
-  extends Pick<BottomTabBarProps, 'state' | 'navigation' | 'descriptors'>,
+  extends BottomTabBarProps,
     TabBarAnimationConfigurableProps {
   /**
    * Tabs configurations.
@@ -70,26 +67,10 @@ const AnimatedTabBarComponent = (props: AnimatedTabBarProps) => {
   } = props;
 
   // variables
-  const isReactNavigation5 = useMemo(() => (state ? true : false), [state]);
-  const {
-    routes,
-    index: navigationIndex,
-    key: navigationKey,
-  }: { routes: Route<string>[]; index: number; key: string } = useMemo(() => {
-    if (isReactNavigation5) {
-      return state;
-    } else {
-      return {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        index: navigation.state.index,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        routes: navigation.state.routes,
-        key: '',
-      };
-    }
-  }, [navigation, state, isReactNavigation5]);
+
+  const {routes, index: navigationIndex, key: navigationKey} = useMemo(() => {
+    return state;
+  }, [state]);
 
   // reanimated
   const selectedIndex = useSharedValue(0);
@@ -97,35 +78,27 @@ const AnimatedTabBarComponent = (props: AnimatedTabBarProps) => {
   // callbacks
   const getRouteTitle = useCallback(
     (route: Route<string>) => {
-      if (isReactNavigation5) {
-        const { options } = descriptors[route.key];
-        // eslint-disable-next-line no-nested-ternary
-        return options.tabBarLabel !== undefined &&
-          typeof options.tabBarLabel === 'string'
-          ? options.tabBarLabel
-          : options.title !== undefined
-          ? options.title
-          : route.name;
-      } else {
-        return route.key;
-      }
+      const {options} = descriptors[route.key];
+      // eslint-disable-next-line no-nested-ternary
+      return options.tabBarLabel !== undefined &&
+        typeof options.tabBarLabel === 'string'
+        ? options.tabBarLabel
+        : options.title !== undefined
+        ? options.title
+        : route.name;
     },
-    [isReactNavigation5, descriptors]
+    [descriptors],
   );
 
   const getRouteTabConfigs = useCallback(
     (route: Route<string>) => {
-      if (isReactNavigation5) {
-        return tabs[route.name];
-      } else {
-        return tabs[route.key];
-      }
+      return tabs[route.name];
     },
-    [isReactNavigation5, tabs]
+    [tabs],
   );
 
   const getRoutes = useCallback(() => {
-    return routes.map((route) => ({
+    return routes.map(route => ({
       key: route.key,
       title: getRouteTitle(route),
       ...getRouteTabConfigs(route),
@@ -134,28 +107,21 @@ const AnimatedTabBarComponent = (props: AnimatedTabBarProps) => {
 
   const handleSelectedIndexChange = useCallback(
     (index: number) => {
-      if (isReactNavigation5) {
-        const { key, name } = routes[index];
-        const event = navigation.emit({
-          type: 'tabPress',
-          target: key,
-          canPreventDefault: true,
-        });
+      const {key, name} = routes[index];
+      const event = navigation.emit({
+        type: 'tabPress',
+        target: key,
+        canPreventDefault: true,
+      });
 
-        if (!event.defaultPrevented) {
-          navigation.dispatch({
-            ...CommonActions.navigate(name),
-            target: navigationKey,
-          });
-        }
-      } else {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const { onTabPress } = props;
-        onTabPress({ route: routes[index] });
+      if (!event.defaultPrevented) {
+        navigation.dispatch({
+          ...CommonActions.navigate(name),
+          target: navigationKey,
+        });
       }
     },
-    [isReactNavigation5, routes, navigation, navigationKey, props]
+    [routes, navigation, navigationKey],
   );
 
   // Effects
@@ -167,10 +133,10 @@ const AnimatedTabBarComponent = (props: AnimatedTabBarProps) => {
 
   useAnimatedReaction(
     () => selectedIndex.value,
-    (nextSelected) => {
+    nextSelected => {
       runOnJS(handleSelectedIndexChange)(nextSelected);
     },
-    [selectedIndex, handleSelectedIndexChange]
+    [selectedIndex, handleSelectedIndexChange],
   );
 
   // render

@@ -1,8 +1,8 @@
-import React, { memo } from 'react';
+import React, {memo} from 'react';
 import isEqual from 'react-fast-compare';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Animated, {
   interpolate,
@@ -11,21 +11,17 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 
-import { Home } from './Home';
-import { Profile } from './Profile';
-import AnimatedTabBar, { TabsConfigsType } from 'curved-bottom-navigation-bar';
-import { Likes } from './Likes';
-import { Create } from './Create';
-
+import {Home} from './Home';
+import {Profile} from './Profile';
+import AnimatedTabBar, {TabsConfigsType} from 'curved-bottom-navigation-bar';
+import {Likes} from './Likes';
+import {Create} from './Create';
+Icon.loadFont().then();
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
-const CustomIcon = ({
-  progress,
-}: {
-  progress: Animated.SharedValue<number>;
-}) => {
+const CustomIcon = ({progress}: {progress: Animated.SharedValue<number>}) => {
   const color = useDerivedValue(() =>
-    interpolateColor(progress.value, [0, 1], ['red', 'green'])
+    interpolateColor(progress.value, [0, 1], ['red', 'green']),
   );
   return <AnimatedIcon name={'home'} size={24} color={color.value} />;
 };
@@ -38,7 +34,7 @@ const CustomTitle = ({
   title: string;
 }) => {
   const fontSize = useDerivedValue(() =>
-    interpolate(progress.value, [0, 1], [14, 1])
+    interpolate(progress.value, [0, 1], [14, 1]),
   );
   const style = useAnimatedStyle(() => ({
     fontSize: fontSize.value,
@@ -48,16 +44,16 @@ const CustomTitle = ({
 
 const tabs: TabsConfigsType = {
   Home: {
-    icon: (props) => <AnimatedIcon name={'home'} size={24} />,
+    icon: props => <AnimatedIcon name={'home'} size={24} />,
   },
   Profile: {
-    icon: (props) => <Icon name={'user'} size={24} />,
+    icon: props => <Icon name={'user'} size={24} />,
   },
   Create: {
-    icon: (props) => <Icon name={'plus'} size={24} />,
+    icon: props => <Icon name={'plus'} size={24} />,
   },
   Likes: {
-    icon: (props) => <Icon name={'like2'} size={24} />,
+    icon: props => <Icon name={'like2'} size={24} />,
   },
 };
 const Tab = createBottomTabNavigator();
@@ -67,10 +63,9 @@ const AppComponent = () => {
     <SafeAreaProvider>
       <NavigationContainer>
         <Tab.Navigator
-          tabBar={(props) => (
+          tabBar={props => (
             <AnimatedTabBar tabs={tabs} titleShown {...props} />
-          )}
-        >
+          )}>
           <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Likes" component={Likes} />
           <Tab.Screen name="Create" component={Create} />

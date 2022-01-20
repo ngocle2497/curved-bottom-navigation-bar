@@ -1,6 +1,6 @@
 {
   "name": "curved-bottom-navigation-bar",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "description": "Hight performance animated bottom navigation bar for both Android and IOS",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -35,21 +35,21 @@
     "bottom-bar",
     "reanimated-bottom-bar"
   ],
-  "repository": "https://github.com/hngocl/curved-bottom-navigation-bar",
-  "author": "HNgocL <lhngoc2497@gmail.com> (https://github.com/hngocl)",
+  "repository": "https://github.com/MasonLe2497/curved-bottom-navigation-bar#readme",
+  "author": "MasonLe <lhngoc2497@gmail.com> (https://github.com/MasonLe2497)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hngocl/curved-bottom-navigation-bar/issues"
+    "url": "https://github.com/MasonLe2497/curved-bottom-navigation-bar/issues"
   },
-  "homepage": "https://github.com/hngocl/curved-bottom-navigation-bar#readme",
+  "homepage": "https://github.com/MasonLe2497/curved-bottom-navigation-bar#readme",
   "dependencies": {
     "react-fast-compare": "3.1.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native-community/eslint-config": "^2.0.0",
-    "@react-navigation/bottom-tabs": ">=5.11.7",
-    "@react-navigation/native": ">=5.9.2",
+    "@react-navigation/bottom-tabs": ">= 5.11.7",
+    "@react-navigation/native": ">= 5.9.2",
     "@release-it/conventional-changelog": "^2.0.0",
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.19",
@@ -62,23 +62,23 @@
     "jest": "^26.0.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
-    "react": "16.13.1",
-    "react-native": "0.63.4",
+    "react": "17.0.2",
+    "react-native": "0.66.4",
     "react-native-builder-bob": "^0.17.1",
-    "react-native-reanimated": "2.1.0",
+    "react-native-reanimated": "^2.3.1",
     "react-native-safe-area-context": "^3.2.9",
     "react-native-svg": "^12.1.1",
     "release-it": "^14.2.2",
-    "typescript": "^4.1.3"
+    "typescript": "^4.3.2"
   },
   "peerDependencies": {
-    "@react-navigation/bottom-tabs": "^5.11.7",
-    "@react-navigation/native": "^5.9.2",
+    "@react-navigation/bottom-tabs": ">= 5.11.7",
+    "@react-navigation/native": ">= 5.9.2",
     "react": "*",
     "react-native": "*",
-    "react-native-reanimated": "^2.0.0",
+    "react-native-reanimated": ">= 2.3.0",
     "react-native-safe-area-context": ">=3.1.9",
-    "react-native-svg": ">=12.1.0"
+    "react-native-svg": ">= 12.1.0"
   },
   "react-native-builder-bob": {
     "source": "src",

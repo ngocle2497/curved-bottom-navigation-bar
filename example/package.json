@@ -1,43 +1,57 @@
 {
-  "name": "curved-bottom-navigation-bar-example",
-  "description": "Example app for curved-bottom-navigation-bar",
+  "name": "example",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "npx react-native run-android",
-    "ios": "npx react-native run-ios",
-    "start": "react-native start"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@react-navigation/bottom-tabs": "^5.11.7",
-    "@react-navigation/native": "^5.9.2",
-    "curved-bottom-navigation-bar": "^1.0.7",
-    "react": "16.13.1",
+    "@react-navigation/bottom-tabs": "^6.0.6",
+    "@react-navigation/native": "^6.0.6",
+    "react": "17.0.2",
     "react-fast-compare": "^3.2.0",
-    "react-native": "0.63.4",
-    "react-native-reanimated": "^2.0.0-rc.3",
-    "react-native-safe-area-context": "^3.1.9",
-    "react-native-screens": "^2.17.1",
-    "react-native-svg": "^12.1.0",
-    "react-native-vector-icons": "^8.0.0"
+    "react-native": "0.66.4",
+    "curved-bottom-navigation-bar": "../",
+    "react-native-reanimated": "^2.3.1",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-screens": "^3.10.2",
+    "react-native-svg": "^12.1.1",
+    "react-native-vector-icons": "^9.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/runtime": "^7.8.4",
-    "@react-native-community/eslint-config": "^1.1.0",
-    "@types/jest": "^25.2.3",
-    "@types/react-native": "^0.63.2",
-    "@types/react-native-vector-icons": "^6.4.6",
-    "@types/react-test-renderer": "^16.9.2",
-    "@typescript-eslint/eslint-plugin": "^4.8.1",
-    "@typescript-eslint/parser": "^4.8.1",
-    "babel-jest": "^25.1.0",
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/react-native": "^0.66.4",
+    "@types/react-native-vector-icons": "^6.4.10",
+    "@types/react-test-renderer": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "babel-jest": "^26.6.3",
     "babel-plugin-module-resolver": "^4.1.0",
-    "eslint": "^6.5.1",
-    "eslint-plugin-import": "^2.22.1",
-    "jest": "^25.1.0",
-    "metro-react-native-babel-preset": "^0.59.0",
-    "react-test-renderer": "16.13.1",
-    "typescript": "^3.8.3"
+    "eslint": "^7.14.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.66.2",
+    "react-test-renderer": "17.0.2",
+    "typescript": "^4.4.4"
+  },
+  "resolutions": {
+    "@types/react": "^17"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

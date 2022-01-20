@@ -1,10 +1,9 @@
 <div align="center">
 <h1>Curved Navigation Bar</h1>
 
-
 <img src="./preview.gif">
 
-High performance animated bottom navigation bar for both Android and IOS 😎 with react navigation v4/v5.
+High performance animated bottom navigation bar for both Android and IOS 😎 with react navigation v5 or higher.
 
 </div>
 
@@ -29,17 +28,10 @@ yarn add curved-bottom-navigation-bar
 # or
 npm install curved-bottom-navigation-bar
 ```
-Link native code:
-  - React Native >= 0.60: Link is automatic.
-  - React Native < 0.60 
-    - `react-native link curved-bottom-navigation-bar`
 
 > Also, you need to install [react-native-reanimated-v2](https://docs.swmansion.com/react-native-reanimated/docs/installation) & [react-native-svg](https://github.com/react-native-community/react-native-svg), and follow theirs installation instructions.
 
 ## Usage
-
-<details>
-  <summary>React Navigation v5</summary>
 
 ```tsx
 import React from 'react';
@@ -84,51 +76,6 @@ export default function App() {
 }
 ```
 
-</details>
-
-<details>
-  <summary>React Navigation v4</summary>
-
-```tsx
-import React from 'react';
-import {createAppContainer} from 'react-navigation';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {createStackNavigator} from 'react-navigation-stack';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import AnimatedTabBar, {TabsConfigsType} from 'curved-bottom-navigation-bar';
-
-const tabs: TabsConfigsType = {
-    Home: {
-        icon: ({ progress }) => /* Icon Component */,
-        renderTitle: ({ progress,title }) => /* Custom reanimated Component */
-    },
-    Profile: {
-        icon: ({ progress }) => /* Icon Component */,
-        renderTitle: ({ progress,title }) => /* Custom reanimated Component */
-    },
-}
-
-const TabNavigator = createBottomTabNavigator(
-  {
-    Home: HomeScreen,
-    Profile: ProfileScreen,
-  },
-  {
-    tabBarComponent: props => <AnimatedTabBar tabs={tabs} {...props} />,
-  },
-);
-
-const AppContainer = createAppContainer(TabNavigator);
-
-export default () => (
-  <SafeAreaProvider>
-    <AppContainer />
-  </SafeAreaProvider>
-);
-```
-
-</details>
-
 ### Animated Icon
 
 In order to animate the tab icon color, you will need to use the provded prop `color` that will be provided to the icon.
@@ -152,6 +99,7 @@ const AnimatedIcon = ({ progress }: AnimatedIconProps) => {
 
 export default AnimatedIcon;
 ```
+
 ### Animated Title
 
 Custom title value for tabbar
@@ -194,7 +142,6 @@ export default AnimatedTitle;
 | --------------- | -------- | ------- | ---------------------------------------------------------------------------------- |
 | icon            | YES      |         |  Component to be render as tab icon, it will recevie an animated node prop `progress`.
 | renderTitle            | NO      |         |  Component to be render as tab title, it will recevie an animated node prop `progress` and `title`.
-
 
 ## Built With
 
