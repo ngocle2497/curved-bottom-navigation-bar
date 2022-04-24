@@ -20,5 +20,6 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 13.5,
+    color: '#000',
   },
 });

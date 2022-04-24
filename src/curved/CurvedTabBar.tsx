@@ -1,157 +1,176 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {memo, useMemo} from 'react';
-import {View, ViewStyle, StyleProp, useWindowDimensions} from 'react-native';
-import Svg, {Path} from 'react-native-svg';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import Animated, {
-  useDerivedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import React, { memo, useCallback, useMemo } from 'react';
 import isEqual from 'react-fast-compare';
-
-import type {TabBarViewProps} from '../types';
+import { StyleProp, View, ViewStyle } from 'react-native';
+import Animated, {
+  useAnimatedProps,
+  useDerivedValue,
+} from 'react-native-reanimated';
 import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import Svg, { Path, PathProps } from 'react-native-svg';
+import {
+  sharedEq,
   sharedTiming,
   useInterpolate,
-  sharedEq,
   withSharedTransition,
 } from '../AnimatedHelper';
+import { RNShadow } from '../RNShadow';
+import type { TabBarViewProps, TabRoute } from '../types';
+import { HEIGHT_HOLE, TAB_BAR_HEIGHT } from './constant';
+import { ButtonTab } from './item/ButtonTabItem';
+import { Dot } from './item/Dot';
+import { styles } from './style';
 
-import {Dot} from './item/Dot';
-import {ButtonTab} from './item/ButtonTabItem';
-import {styles} from './style';
-import {HEIGHT_HOLE} from './constant';
-import {RNShadow} from '../RNShadow';
-
-const AnimatedSvg = Animated.createAnimatedComponent(Svg);
+const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const CurvedTabBarComponent = (props: TabBarViewProps) => {
   // props
   const {
     routes,
     selectedIndex,
-    dotSize: SIZE_DOT,
-    barHeight: TAB_BAR_HEIGHT,
+    barWidth,
     duration,
     dotColor,
     tabBarColor,
     titleShown,
+    isRtl,
+    navigationIndex,
+    dotSize: SIZE_DOT,
+    barHeight = TAB_BAR_HEIGHT,
   } = props;
-
   // state
-  const {width} = useWindowDimensions();
-  const {bottom} = useSafeAreaInsets();
-  const widthTab = useMemo(() => width / routes.length, [routes, width]);
+  const { bottom } = useSafeAreaInsets();
+  const { width } = useSafeAreaFrame();
+  const actualBarWidth = useMemo<number>(
+    () => barWidth || width,
+    [barWidth, width]
+  );
+  const widthTab = useMemo(
+    () => actualBarWidth / routes.length,
+    [routes, actualBarWidth]
+  );
+  const inputRange = useMemo(
+    () =>
+      isRtl
+        ? routes.map((_: any, index: number) => index).reverse()
+        : routes.map((_: any, index: number) => index),
+    [isRtl, routes]
+  );
+
+  const outputRange = useMemo(
+    () =>
+      routes.map(
+        (_: any, index: number) => (index / routes.length) * actualBarWidth
+      ),
+    [routes, actualBarWidth]
+  );
+  const actualBarHeight = useMemo<number>(
+    () => barHeight + bottom,
+    [barHeight, bottom]
+  );
+  const indexAnimated = useDerivedValue(() =>
+    sharedTiming(selectedIndex.value, { duration })
+  );
+
+  // func
+  const renderButtonTab = useCallback(
+    ({ key, title, ...configs }: TabRoute, index: number) => {
+      return (
+        <ButtonTab
+          focused={index === selectedIndex.value}
+          width={actualBarWidth}
+          key={key}
+          title={title}
+          titleShown={titleShown}
+          indexAnimated={indexAnimated}
+          countTab={routes.length}
+          selectedIndex={selectedIndex}
+          index={index}
+          {...configs}
+        />
+      );
+    },
+    [indexAnimated, routes.length, selectedIndex, titleShown, actualBarWidth]
+  );
 
   // reanimated
-  const indexAnimated = useDerivedValue(() =>
-    sharedTiming(selectedIndex.value, {duration}),
-  );
+
   const progress = withSharedTransition(sharedEq(selectedIndex, indexAnimated));
 
-  const inputRange = useMemo(
-    () => routes.map((_: any, index: number) => index),
-    [routes],
-  );
-
-  const outputRange = routes
-    .map((_: any, index: number) => -(((index + 1) * width) / routes.length))
-    .reverse();
-
-  const translateX = useInterpolate(indexAnimated, inputRange, outputRange);
+  const xPath = useInterpolate(indexAnimated, inputRange, outputRange);
 
   // path
-  const d = useMemo(
-    () =>
-      `M0,0 L${width + widthTab / 2 - SIZE_DOT},0
-    C${width + widthTab / 2 - SIZE_DOT * 0.5},0 ${
-        width + widthTab / 2 - SIZE_DOT * 0.75
-      },${HEIGHT_HOLE} ${width + widthTab / 2},${HEIGHT_HOLE} 
-    C${width + widthTab / 2 + SIZE_DOT * 0.75},${HEIGHT_HOLE} ${
-        width + widthTab / 2 + SIZE_DOT * 0.5
-      },0 ${width + widthTab / 2 + SIZE_DOT} 0 
-    L${width * 2},0 L ${width * 2},${TAB_BAR_HEIGHT} L 0,${TAB_BAR_HEIGHT} Z
-    `,
-    [width, widthTab, SIZE_DOT, TAB_BAR_HEIGHT],
-  );
+  const pathProps = useAnimatedProps<PathProps>(() => {
+    const centerHoleX = xPath.value + widthTab / 2;
+    return {
+      d: `M0,0 L${centerHoleX - SIZE_DOT},0
+      C${centerHoleX - SIZE_DOT * 0.5},0 ${
+        centerHoleX - SIZE_DOT * 0.75
+      },${HEIGHT_HOLE} ${centerHoleX},${HEIGHT_HOLE} 
+      C${centerHoleX + SIZE_DOT * 0.75},${HEIGHT_HOLE} ${
+        centerHoleX + SIZE_DOT * 0.5
+      },0 ${centerHoleX + SIZE_DOT} 0 
+      L${actualBarWidth * 2},0 L ${
+        actualBarWidth * 2
+      },${actualBarHeight} L 0,${actualBarHeight} Z
+      `,
+    };
+  }, [actualBarWidth, widthTab, SIZE_DOT, actualBarHeight]);
 
   // style
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [
       {
-        height: TAB_BAR_HEIGHT,
-        bottom: bottom,
+        height: actualBarHeight,
+        width: actualBarWidth,
       },
     ],
-    [TAB_BAR_HEIGHT, bottom],
+    [actualBarHeight, actualBarWidth]
   );
-  const svgStyle = useAnimatedStyle(() => ({
-    height: TAB_BAR_HEIGHT,
-    transform: [
-      {
-        translateX: translateX.value,
-      },
-    ],
-  }));
-  const rowTab = useMemo(
-    () => [{bottom: bottom, width: width, height: TAB_BAR_HEIGHT}],
-    [bottom, TAB_BAR_HEIGHT, width],
-  );
-
-  const bottomView = useMemo<StyleProp<ViewStyle>>(
+  const rowTab = useMemo<StyleProp<ViewStyle>>(
     () => [
       {
-        height: bottom,
-        width: width,
-        backgroundColor: tabBarColor,
+        width: actualBarWidth,
+        height: actualBarHeight,
       },
     ],
-    [bottom, width, tabBarColor],
+    [actualBarHeight, actualBarWidth]
   );
 
   return (
     <>
       <RNShadow style={[styles.container, containerStyle]}>
-        <AnimatedSvg
-          width={width * 2}
-          height={TAB_BAR_HEIGHT}
-          style={[styles.svg, svgStyle]}>
-          <Path
-            d={`${d}`}
+        <Svg
+          width={actualBarWidth}
+          height={actualBarHeight}
+          style={[styles.svg]}
+        >
+          <AnimatedPath
+            animatedProps={pathProps}
             translateY={3}
             fill={tabBarColor}
             stroke={'transparent'}
             strokeWidth={0}
           />
-        </AnimatedSvg>
+        </Svg>
       </RNShadow>
       <View style={[styles.rowTab, rowTab]}>
         <Dot
+          navigationIndex={navigationIndex}
+          isRtl={isRtl}
           dotColor={dotColor}
           dotSize={SIZE_DOT}
-          barHeight={TAB_BAR_HEIGHT}
-          width={width}
+          barHeight={actualBarHeight}
+          width={actualBarWidth}
           selectedIndex={indexAnimated}
           routes={routes}
           progress={progress}
         />
-        {routes.map(({key, title, ...configs}, index) => {
-          return (
-            <ButtonTab
-              width={width}
-              key={key}
-              title={title}
-              titleShown={titleShown}
-              indexAnimated={indexAnimated}
-              countTab={routes.length}
-              selectedIndex={selectedIndex}
-              index={index}
-              {...configs}
-            />
-          );
-        })}
+        {routes.map(renderButtonTab)}
       </View>
-      <View style={[styles.bottomView, bottomView]} />
     </>
   );
 };

@@ -41,11 +41,11 @@ import AnimatedTabBar, {TabsConfigsType} from 'curved-bottom-navigation-bar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 const tabs: TabsConfigsType = {
     Home: {
-        icon: ({ progress }) => /* Icon Component */,
+        icon: ({ progress, focused }) => /* Icon Component */,
         renderTitle: ({ progress, title }) => /* Custom reanimated Component */
     },
     Profile: {
-        icon: ({ progress }) => /* Icon Component */,
+        icon: ({ progress, focused }) => /* Icon Component */,
         renderTitle: ({ progress, title }) => /* Custom reanimated Component */
     },
 }
@@ -89,6 +89,7 @@ import Animated from 'react-native-reanimated';
 
 interface AnimatedIconProps {
   progress: Animated.SharedValue<number>; // Reanimated - 0 is not Active, 1 is Active
+  focused: boolean;
 }
 
 const AnimatedIcon = ({ progress }: AnimatedIconProps) => {

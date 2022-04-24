@@ -1,20 +1,20 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     position: 'absolute',
-    width: '100%',
+    bottom: 0,
     backgroundColor: 'transparent',
     zIndex: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2.5,
+    alignSelf: 'center',
+    overflow: 'visible',
   },
   svg: {
     backgroundColor: 'transparent',
-    width: '200%',
     top: 0,
     position: 'absolute',
     zIndex: 1,
@@ -22,13 +22,9 @@ export const styles = StyleSheet.create({
   rowTab: {
     flexDirection: 'row',
     position: 'absolute',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
     backgroundColor: 'transparent',
+    alignSelf: 'center',
     zIndex: 2,
-  },
-  bottomView: {
-    position: 'absolute',
     bottom: 0,
   },
 });

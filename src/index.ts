@@ -1,2 +1,2 @@
-export {AnimatedTabBar as default} from './AnimatedTabBar';
-export type {TabsConfigsType} from './types';
+export { AnimatedTabBar as default } from './AnimatedTabBar';
+export type { TabsConfigsType } from './types';

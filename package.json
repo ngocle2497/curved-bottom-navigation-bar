@@ -1,6 +1,6 @@
 {
   "name": "curved-bottom-navigation-bar",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Hight performance animated bottom navigation bar for both Android and IOS",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
